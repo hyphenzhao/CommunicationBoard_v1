@@ -104,6 +104,7 @@ namespace HoloToolkit.Unity
 
                 case PivotAxis.Free:
                     directionToTarget.y = 90.0f;
+                    targetUpVector = Vector3.up;
                     break;
                 default:
                     // No changes needed.

@@ -1,6 +1,6 @@
 Metro
 PlayerPath?
-C:/Users/chenr/source/repos/CommunicationBoard-V1/CommunicationBoard_v1/Apps
+C:/Users/chenr/source/repos/CommunicationBoard-V3/CommunicationBoard_v1/Apps
 SceneListBegin?
 Assets/Scenes/MainScene.unity
 SceneListEnd?
@@ -73,6 +73,7 @@ f61c0793411f10cf5fbfa1473fef5ef2 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 86d36c43c53541d667100dc90b89cfba UnityEngine.UI.dll:UnityEngine.EventSystems.TouchInputModule
 1b8c02d0aa82fbf036a2b9b2d713eec3 UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
 a33037253cd01a5bfd05db4cf8688db5 Assembly-CSharp.dll:HoloToolkit.UI.Keyboard.AxisSlider
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Academy.ExitInteractibleAction
 84c6ed998f9c6da7a394ee14242f5314 Assembly-CSharp.dll:HoloToolkit.Unity.Billboard
 b3823de281e428cf0dba1153469ff4ab Assembly-CSharp.dll:HoloToolkit.Unity.SphereBasedTagalong
 cc7d22919b8a0916251b68c80b9c488b Assembly-CSharp.dll:Academy.Fitbox
@@ -174,6 +175,7 @@ bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.Audi
 463516d5b5fe8e67a0a24c48f2095b04 UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInputModule
 c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingCollider
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
+65a76786d00834164549fee7199294f1 Assembly-CSharp.dll:Academy.TrackInteractibleAction
 0c54457acf5fb42a3654de9a3cf811d7 Assembly-CSharp.dll:HoloToolkit.Unity.Buttons.AnimControllerButton
 9304e440bbb09edb0213939e09d91f73 Assembly-CSharp.dll:HoloToolkit.Unity.SolverSurfaceMagnetism
 047eb998adc2d948ddc55c599621cd6b Assembly-CSharp.dll:HoloToolkit.Unity.InputModule.RawInteractionInputSource
@@ -438,5 +440,3 @@ a924c90a95cf65003f662aa5e30abb6b Vuforia.UnityExtensions.dll:Vuforia.VuforiaConf
 01e6f145049f3a676df6dc247eabf176 Vuforia.UnityExtensions.dll:Vuforia.VuMarkBehaviour
 3d1b89310e77c34bc0c8d7132231345c Vuforia.UnityExtensions.dll:Vuforia.WireframeBehaviour
 05524b8f659e7bfe5756d1335fec24ba Vuforia.UnityExtensions.dll:Vuforia.WireframeTrackableEventHandler
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Academy.ExitInteractibleAction
-65a76786d00834164549fee7199294f1 Assembly-CSharp.dll:Academy.TrackInteractibleAction

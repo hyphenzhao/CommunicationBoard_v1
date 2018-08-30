@@ -15853,12 +15853,12 @@
   },
   "project": {
     "restore": {
-      "projectUniqueName": "C:\\Users\\chenr\\source\\repos\\CommunicationBoard-V1\\Apps\\CommunicationBoard-V1\\CommunicationBoard-V1.csproj",
+      "projectUniqueName": "C:\\Users\\chenr\\source\\repos\\CommunicationBoard-V3\\CommunicationBoard_v1\\Apps\\CommunicationBoard-V1\\CommunicationBoard-V1.csproj",
       "projectName": "CommunicationBoard-V1",
-      "projectPath": "C:\\Users\\chenr\\source\\repos\\CommunicationBoard-V1\\Apps\\CommunicationBoard-V1\\CommunicationBoard-V1.csproj",
-      "projectJsonPath": "C:\\Users\\chenr\\source\\repos\\CommunicationBoard-V1\\Apps\\CommunicationBoard-V1\\project.json",
+      "projectPath": "C:\\Users\\chenr\\source\\repos\\CommunicationBoard-V3\\CommunicationBoard_v1\\Apps\\CommunicationBoard-V1\\CommunicationBoard-V1.csproj",
+      "projectJsonPath": "C:\\Users\\chenr\\source\\repos\\CommunicationBoard-V3\\CommunicationBoard_v1\\Apps\\CommunicationBoard-V1\\project.json",
       "packagesPath": "C:\\Users\\chenr\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\chenr\\source\\repos\\CommunicationBoard-V1\\Apps\\CommunicationBoard-V1\\obj\\",
+      "outputPath": "C:\\Users\\chenr\\source\\repos\\CommunicationBoard-V3\\CommunicationBoard_v1\\Apps\\CommunicationBoard-V1\\obj\\",
       "projectStyle": "ProjectJson",
       "configFilePaths": [
         "C:\\Users\\chenr\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -15871,8 +15871,8 @@
       "frameworks": {
         "uap10.0.10240": {
           "projectReferences": {
-            "C:\\Users\\chenr\\source\\repos\\CommunicationBoard-V1\\Apps\\GeneratedProjects\\UWP\\Assembly-CSharp\\Assembly-CSharp.csproj": {
-              "projectPath": "C:\\Users\\chenr\\source\\repos\\CommunicationBoard-V1\\Apps\\GeneratedProjects\\UWP\\Assembly-CSharp\\Assembly-CSharp.csproj"
+            "C:\\Users\\chenr\\source\\repos\\CommunicationBoard-V3\\CommunicationBoard_v1\\Apps\\GeneratedProjects\\UWP\\Assembly-CSharp\\Assembly-CSharp.csproj": {
+              "projectPath": "C:\\Users\\chenr\\source\\repos\\CommunicationBoard-V3\\CommunicationBoard_v1\\Apps\\GeneratedProjects\\UWP\\Assembly-CSharp\\Assembly-CSharp.csproj"
             }
           }
         }

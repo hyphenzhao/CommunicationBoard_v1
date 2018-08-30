@@ -361,8 +361,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="C:\Users\chenr\source\repos\CommunicationBoard-V1\Apps\GeneratedProjects\UWP\Assembly-CSharp\Assembly-CSharp.csproj">
-      <Project>{1f5f5a2f-8443-4f86-96b2-dcc5cb22e030}</Project>
+    <ProjectReference Include="C:\Users\chenr\source\repos\CommunicationBoard-V1\CommunicationBoard_v1\Apps\GeneratedProjects\UWP\Assembly-CSharp\Assembly-CSharp.csproj">
+      <Project>{ef907cd1-559c-4953-b60f-230c4ad81076}</Project>
       <Name>Assembly-CSharp</Name>
       <Private>False</Private>
     </ProjectReference>

@@ -83,10 +83,10 @@ namespace Academy
 
             /* TODO: DEVELOPER CODING EXERCISE 6.a */
             // 6.a: Uncomment the lines below to perform a Tagalong action.
-            //if (interactibleAction != null)
-            //{
-            //    interactibleAction.PerformAction();
-            //}
+            if (interactibleAction != null)
+            {
+                interactibleAction.PerformAction();
+            }
         }
 
         private void OnDestroy()

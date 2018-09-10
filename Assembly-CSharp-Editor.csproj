@@ -391,6 +391,12 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>C:/Users/chenr/source/repos/CommunicationBoard-V3/CommunicationBoard_v1/Assets/HoloToolkit/Utilities/Scripts/GLTF/Plugins/JsonNet/Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="DotNetZip">
+      <HintPath>C:/Users/chenr/source/repos/CommunicationBoard-V3/CommunicationBoard_v1/Assets/NuGet/Editor/DotNetZip.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGetForUnity">
+      <HintPath>C:/Users/chenr/source/repos/CommunicationBoard-V3/CommunicationBoard_v1/Assets/NuGet/Editor/NuGetForUnity.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>C:/Users/chenr/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.7/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>

@@ -11,6 +11,10 @@ namespace Academy
         [SerializeField]
         [Tooltip("Drag the Tagalong prefab asset you want to display.")]
         private GameObject objectToTrack;
+        [SerializeField]
+        private GameObject acitiveObject1;
+        [SerializeField]
+        private GameObject acitiveObject2;
 
         public override void PerformAction()
         {
@@ -21,6 +25,9 @@ namespace Academy
             }
             objectToTrack.GetComponent<Tagalong>().enabled = true;
             objectToTrack.GetComponent<Billboard>().enabled = true;
+            objectToTrack.GetComponent<TCPClientSide>().enabled = true;
+            acitiveObject1.SetActive(true);
+            acitiveObject2.SetActive(true);
         }
     }
 }

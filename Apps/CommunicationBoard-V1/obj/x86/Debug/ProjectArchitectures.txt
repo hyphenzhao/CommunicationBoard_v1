@@ -1,2 +1,0 @@
-C:\Users\chenr\source\repos\CommunicationBoard-V3\CommunicationBoard_v1\Apps\CommunicationBoard-V1\CommunicationBoard-V1.csproj;x86
-C:\Users\chenr\source\repos\CommunicationBoard-V3\CommunicationBoard_v1\Apps\GeneratedProjects\UWP\Assembly-CSharp\Assembly-CSharp.csproj;x86

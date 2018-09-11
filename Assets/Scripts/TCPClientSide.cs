@@ -16,6 +16,11 @@ public class PupilData
     public float[] norm_pos = new float[2];
     public float confidence;
     public float timestamp;
+    public PupilData()
+    {
+        norm_pos[0] = 0;
+        norm_pos[1] = 0;
+    }
 }
 
 public class TCPClientSide : MonoBehaviour
@@ -41,10 +46,15 @@ public class TCPClientSide : MonoBehaviour
     private GameObject pupil1;
     [SerializeField]
     private GameObject pupil0;
+    [SerializeField]
+    private GameObject gaze;
 
     private float boardWidth;
     private float boardHeight;
-    private float tx = 0f, tz = 0f;
+    private PupilData preData;
+    private static int buffer_size = 10;
+    private PupilData[,] buffer = new PupilData[2, buffer_size];
+    private int buffer_counter = 0;
 
     public void Start()
     {
@@ -219,42 +229,63 @@ public class TCPClientSide : MonoBehaviour
         foreach (var data in dataset)
         {
             if (String.IsNullOrEmpty(data)) continue;
-            // Debug.Log("Read data: " + data);
             PupilData pupildata = JsonConvert.DeserializeObject<PupilData>(data);
-            // PupilData pupildata = JsonUtility.FromJson<PupilData>(data);
-            if (pupildata.confidence >= 0.60)
-                TrackPupil(pupildata);
+            if (preData == null && pupildata.topic.EndsWith(".1.")) continue;
+            if (pupildata.topic.EndsWith(".0.")) preData = pupildata;
+            else if (pupildata.confidence >= 0.60 && preData.confidence >= 0.60)
+                TrackPupil(preData, pupildata);
         }
         
     }
 
-    private void TrackPupil(PupilData pdata)
+    private void PushToBuffer(PupilData p0data, PupilData p1data)
     {
-        float nx = pdata.norm_pos[0] - 0.5f;
-        float nz = pdata.norm_pos[1] - 0.5f;
-        if (pdata.topic.EndsWith(".1."))
+        if(buffer_counter < buffer_size)
         {
-            nx = -nx;
-            nz = -nz;
-        }
-        nx *= boardWidth;
-        nz *= boardHeight;
-        if (pdata.topic.EndsWith(".0."))
-        {
-            nx = (tx + nx) / 2f;
-            nz = (tz + nz) / 2f;
-            nx = GlobalVars.k1 * nx + GlobalVars.k2 * nz + GlobalVars.k3;
-            nz = GlobalVars.k4 * nx + GlobalVars.k5 * nz + GlobalVars.k6;
-            float ny = -0.07f;
-            pupil0.transform.localPosition = new Vector3(nx, ny, nz);
-            // Debug.Log("X: " + nx + " Y: " + ny);
+            buffer[0, buffer_counter] = p0data;
+            buffer[1, buffer_counter] = p1data;
+            buffer_counter++;
         }
         else
         {
-            tx = nx; tz = nz;
-            float ny = -0.07f;
-            //pupil1.transform.localPosition = new Vector3(nx, ny, nz);
+            PupilData p0 = new PupilData();
+            PupilData p1 = new PupilData();
+            for(int i = 0; i < buffer_size; i++)
+            {
+                p0.norm_pos[0] += buffer[0, i].norm_pos[0];
+                p0.norm_pos[1] += buffer[0, i].norm_pos[1];
+                p1.norm_pos[0] += buffer[1, i].norm_pos[0];
+                p1.norm_pos[1] += buffer[1, i].norm_pos[1];
+            }
+            p0.norm_pos[0] /= (float)buffer_size;
+            p0.norm_pos[1] /= (float)buffer_size;
+            p1.norm_pos[0] /= (float)buffer_size;
+            p1.norm_pos[1] /= (float)buffer_size;
+            TrackPupil(p0, p1);
+            buffer_counter = 0;
         }
+    }
+
+    private void TrackPupil(PupilData p0data, PupilData p1data)
+    {
+        float nx = -p1data.norm_pos[0] + 0.5f;
+        float nz = -p1data.norm_pos[1] + 0.5f;
+        nx *= boardWidth;
+        nz *= boardHeight;
+        float tx = p0data.norm_pos[0] - 0.5f;
+        float tz = p0data.norm_pos[1] - 0.5f;
+        tx *= boardWidth;
+        tz *= boardHeight;
+        nx = GlobalVars.k01 * nx + GlobalVars.k02 * nz + GlobalVars.k03;
+        nz = GlobalVars.k04 * nx + GlobalVars.k05 * nz + GlobalVars.k06;
+        tx = GlobalVars.k11 * tx + GlobalVars.k12 * tz + GlobalVars.k13;
+        tz = GlobalVars.k14 * tx + GlobalVars.k15 * tz + GlobalVars.k16;
+        float gx = (tx + nx) / 2f;
+        float gz = (tz + nz) / 2f;
+        float y = -0.07f;
+        pupil0.transform.localPosition = new Vector3(nx, y, nz);
+        pupil1.transform.localPosition = new Vector3(tx, y, tz);
+        gaze.transform.localPosition = new Vector3(gx, y, gz);
     }
 
     public void StopExchange()
@@ -276,9 +307,12 @@ public class TCPClientSide : MonoBehaviour
 #else
         if (exchangeTask != null) {
             exchangeTask.Wait();
-            socket.Dispose();
-            writer.Dispose();
-            reader.Dispose();
+            if(socket != null)
+                socket.Dispose();
+            //if(writer != null)
+            //    writer.Dispose();
+            //if(reader != null)
+            //    reader.Dispose();
 
             socket = null;
             exchangeTask = null;
@@ -286,6 +320,11 @@ public class TCPClientSide : MonoBehaviour
 #endif
         writer = null;
         reader = null;
+    }
+
+    public void OnDisable()
+    {
+        StopExchange();
     }
 
     public void OnDestroy()

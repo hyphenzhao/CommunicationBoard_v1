@@ -48,10 +48,12 @@ public class Calibration : MonoBehaviour, IInputClickHandler
     private int sizeGoal;
     private float boardWidth;
     private float boardHeight;
-    private PupilData[] pupil0Data = new PupilData[55];
-    private PupilData[] pupil1Data = new PupilData[55];
-    private float[] ox = new float[5];
-    private float[] oy = new float[5];
+    private PupilData[] pupil0Data = new PupilData[105];
+    private PupilData[] pupil1Data = new PupilData[105];
+    private float[] o0x = new float[5];
+    private float[] o0y = new float[5];
+    private float[] o1x = new float[5];
+    private float[] o1y = new float[5];
     private float[] rx = new float[5];
     private float[] ry = new float[5];
 
@@ -76,7 +78,7 @@ public class Calibration : MonoBehaviour, IInputClickHandler
 
     // Use this for initialization
     void Start () {
-        sizeGoal = 50;
+        sizeGoal = 100;
         rx[1] = GlobalVars.p1x; ry[1] = GlobalVars.p1z;
         rx[2] = GlobalVars.p2x; ry[2] = GlobalVars.p2z;
         rx[3] = GlobalVars.p3x; ry[3] = GlobalVars.p3z;
@@ -235,9 +237,12 @@ public class Calibration : MonoBehaviour, IInputClickHandler
 #else
         if (exchangeTask != null) {
             exchangeTask.Wait();
-            socket.Dispose();
-            // writer.Dispose();
-            // reader.Dispose();
+            if(socket != null)
+                socket.Dispose();
+            //if(writer != null)
+            //    writer.Dispose();
+            //if(reader != null)
+            //    reader.Dispose();
 
             socket = null;
             exchangeTask = null;
@@ -252,6 +257,10 @@ public class Calibration : MonoBehaviour, IInputClickHandler
         StopExchange();
     }
 
+    public void OnDestroy()
+    {
+        StopExchange();
+    }
 
     void CollectCalibrationDataAtScene(int scene)
     {
@@ -310,37 +319,46 @@ public class Calibration : MonoBehaviour, IInputClickHandler
             case 4: point = point4; break;
             default: point = point1; break;
         }
-        float tx = 0, ty = 0;
+        float t0x = 0, t0y = 0, t1x = 0, t1y = 0;
         for(int i = 0; i < sizeGoal; i++)
         {
-            tx += pupil0Data[i].norm_pos[0];
-            ty += pupil0Data[i].norm_pos[1];
-            tx += 1 - pupil1Data[i].norm_pos[0];
-            ty += 1 - pupil1Data[i].norm_pos[1];
+            t0x += pupil0Data[i].norm_pos[0];
+            t0y += pupil0Data[i].norm_pos[1];
+            t1x += 1 - pupil1Data[i].norm_pos[0];
+            t1y += 1 - pupil1Data[i].norm_pos[1];
         }
-        ox[scene] = tx / ((float)sizeGoal * 2f) - 0.5f;
-        oy[scene] = ty / ((float)sizeGoal * 2f) - 0.5f;
-        ox[scene] *= boardWidth;
-        oy[scene] *= boardHeight;
+        o0x[scene] = t0x / (float)sizeGoal - 0.5f;
+        o0y[scene] = t0y / (float)sizeGoal - 0.5f;
+        o1x[scene] = t1x / (float)sizeGoal - 0.5f;
+        o1y[scene] = t1y / (float)sizeGoal - 0.5f;
+        o0x[scene] *= boardWidth;
+        o0y[scene] *= boardHeight;
+        o1x[scene] *= boardWidth;
+        o1y[scene] *= boardHeight;
 
         if (scene == 4)
         {
-            GlobalVars.k1 = ((rx[1] - rx[2]) * (oy[2] - oy[3]) - (rx[2] - rx[3]) * (oy[1] - oy[2])) /
-                ((ox[1] - ox[2]) * (oy[2] - oy[3]) - (ox[2] - ox[3]) * (oy[1] - oy[2]));
-            GlobalVars.k2 = ((rx[1] - rx[2]) * (ox[2] - ox[3]) - (rx[2] - rx[3]) * (ox[1] - ox[2])) /
-                ((oy[1] - oy[2]) * (ox[2] - ox[3]) - (oy[2] - oy[3]) * (ox[1] - ox[2]));
-            GlobalVars.k3 = rx[1] - GlobalVars.k1 * ox[1] - GlobalVars.k2 * oy[1];
-            GlobalVars.k4 = ((ry[1] - ry[2]) * (oy[2] - oy[3]) - (ry[2] - ry[3]) * (oy[1] - oy[2])) /
-                ((ox[1] - ox[2]) * (oy[2] - oy[3]) - (ox[2] - ox[3]) * (oy[1] - oy[2]));
-            GlobalVars.k5 = ((ry[1] - ry[2]) * (ox[2] - ox[3]) - (ry[2] - ry[3]) * (ox[1] - ox[2])) /
-                ((oy[1] - oy[2]) * (ox[2] - ox[3]) - (oy[2] - oy[3]) * (ox[1] - ox[2]));
-            GlobalVars.k6 = ry[1] - GlobalVars.k4 * ox[1] - GlobalVars.k5 * oy[1];
-            Debug.Log("k1: " + GlobalVars.k1);
-            Debug.Log("k2: " + GlobalVars.k2);
-            Debug.Log("k3: " + GlobalVars.k3);
-            Debug.Log("k4: " + GlobalVars.k4);
-            Debug.Log("k5: " + GlobalVars.k5);
-            Debug.Log("k6: " + GlobalVars.k6);
+            GlobalVars.k01 = ((rx[1] - rx[2]) * (o0y[2] - o0y[3]) - (rx[2] - rx[3]) * (o0y[1] - o0y[2])) /
+                ((o0x[1] - o0x[2]) * (o0y[2] - o0y[3]) - (o0x[2] - o0x[3]) * (o0y[1] - o0y[2]));
+            GlobalVars.k02 = ((rx[1] - rx[2]) * (o0x[2] - o0x[3]) - (rx[2] - rx[3]) * (o0x[1] - o0x[2])) /
+                ((o0y[1] - o0y[2]) * (o0x[2] - o0x[3]) - (o0y[2] - o0y[3]) * (o0x[1] - o0x[2]));
+            GlobalVars.k03 = rx[1] - GlobalVars.k01 * o0x[1] - GlobalVars.k02 * o0y[1];
+            GlobalVars.k04 = ((ry[1] - ry[2]) * (o0y[2] - o0y[3]) - (ry[2] - ry[3]) * (o0y[1] - o0y[2])) /
+                ((o0x[1] - o0x[2]) * (o0y[2] - o0y[3]) - (o0x[2] - o0x[3]) * (o0y[1] - o0y[2]));
+            GlobalVars.k05 = ((ry[1] - ry[2]) * (o0x[2] - o0x[3]) - (ry[2] - ry[3]) * (o0x[1] - o0x[2])) /
+                ((o0y[1] - o0y[2]) * (o0x[2] - o0x[3]) - (o0y[2] - o0y[3]) * (o0x[1] - o0x[2]));
+            GlobalVars.k06 = ry[4] - GlobalVars.k04 * o0x[4] - GlobalVars.k05 * o0y[4];
+
+            GlobalVars.k11 = ((rx[1] - rx[2]) * (o1y[2] - o1y[3]) - (rx[2] - rx[3]) * (o1y[1] - o1y[2])) /
+                ((o1x[1] - o1x[2]) * (o1y[2] - o1y[3]) - (o1x[2] - o1x[3]) * (o1y[1] - o1y[2]));
+            GlobalVars.k12 = ((rx[1] - rx[2]) * (o1x[2] - o1x[3]) - (rx[2] - rx[3]) * (o1x[1] - o1x[2])) /
+                ((o1y[1] - o1y[2]) * (o1x[2] - o1x[3]) - (o1y[2] - o1y[3]) * (o1x[1] - o1x[2]));
+            GlobalVars.k13 = rx[1] - GlobalVars.k11 * o1x[1] - GlobalVars.k12 * o1y[1];
+            GlobalVars.k14 = ((ry[1] - ry[2]) * (o1y[2] - o1y[3]) - (ry[2] - ry[3]) * (o1y[1] - o1y[2])) /
+                ((o1x[1] - o1x[2]) * (o1y[2] - o1y[3]) - (o1x[2] - o1x[3]) * (o1y[1] - o1y[2]));
+            GlobalVars.k15 = ((ry[1] - ry[2]) * (o1x[2] - o1x[3]) - (ry[2] - ry[3]) * (o1x[1] - o1x[2])) /
+                ((o1y[1] - o1y[2]) * (o1x[2] - o1x[3]) - (o1y[2] - o1y[3]) * (o1x[1] - o1x[2]));
+            GlobalVars.k16 = ry[4] - GlobalVars.k14 * o1x[4] - GlobalVars.k15 * o1y[4];
         }
 
         Color newColor = new Color(0F, 1F, 0F);

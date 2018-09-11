@@ -15,6 +15,12 @@ namespace Academy
         private GameObject acitiveObject1;
         [SerializeField]
         private GameObject acitiveObject2;
+        [SerializeField]
+        private GameObject acitiveObject3;
+        [SerializeField]
+        private GameObject acitiveObject4;
+
+        private bool trackEnabled = false;
 
         public override void PerformAction()
         {
@@ -23,11 +29,24 @@ namespace Academy
             {
                 return;
             }
-            objectToTrack.GetComponent<Tagalong>().enabled = true;
-            objectToTrack.GetComponent<Billboard>().enabled = true;
-            objectToTrack.GetComponent<TCPClientSide>().enabled = true;
-            acitiveObject1.SetActive(true);
-            acitiveObject2.SetActive(true);
+            if (trackEnabled)
+            {
+                objectToTrack.GetComponent<TCPClientSide>().enabled = false;
+                acitiveObject1.SetActive(false);
+                acitiveObject2.SetActive(false);
+                acitiveObject3.SetActive(false);
+                acitiveObject4.GetComponent<CalibrationRefineInteractibleAction>().enabled = false;
+                trackEnabled = false;
+            }
+            else
+            {
+                objectToTrack.GetComponent<TCPClientSide>().enabled = true;
+                acitiveObject1.SetActive(true);
+                acitiveObject2.SetActive(true);
+                acitiveObject3.SetActive(true);
+                acitiveObject4.GetComponent<CalibrationRefineInteractibleAction>().enabled = true;
+                trackEnabled = true;
+            }
         }
     }
 }

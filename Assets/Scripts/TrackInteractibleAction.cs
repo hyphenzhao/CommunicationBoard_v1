@@ -32,6 +32,7 @@ namespace Academy
             if (trackEnabled)
             {
                 objectToTrack.GetComponent<TCPClientSide>().enabled = false;
+                objectToTrack.GetComponent<CheckIntersaction>().enabled = false;
                 acitiveObject1.SetActive(false);
                 acitiveObject2.SetActive(false);
                 acitiveObject3.SetActive(false);
@@ -41,6 +42,7 @@ namespace Academy
             else
             {
                 objectToTrack.GetComponent<TCPClientSide>().enabled = true;
+                objectToTrack.GetComponent<CheckIntersaction>().enabled = true;
                 acitiveObject1.SetActive(true);
                 acitiveObject2.SetActive(true);
                 acitiveObject3.SetActive(true);

@@ -19,7 +19,7 @@ public class GlobalVars : MonoBehaviour {
     public static float p4x, p4z;
     public static float k01, k02, k03, k04, k05, k06;
     public static float k11, k12, k13, k14, k15, k16;
-    public static string remoteIP = "10.19.127.113";
+    public static string remoteIP = "10.19.123.196";
     public static string remotePort = "5005";
     // Use this for initialization
     void Start () {

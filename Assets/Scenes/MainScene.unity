@@ -5368,8 +5368,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 621627224}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.07000014, z: 0}
-  m_LocalScale: {x: 0.20285712, y: 0.20286012, z: 0.20285007}
+  m_LocalPosition: {x: 0, y: -0.0542, z: 0}
+  m_LocalScale: {x: 0.2028571, y: 0.2028601, z: 0.2028501}
   m_Children: []
   m_Father: {fileID: 1026043206}
   m_RootOrder: 100
@@ -5384,7 +5384,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.01
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &621627227
 MeshRenderer:
@@ -9709,6 +9709,7 @@ GameObject:
   - component: {fileID: 1026043208}
   - component: {fileID: 1026043207}
   - component: {fileID: 1026043211}
+  - component: {fileID: 1026043213}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -9971,6 +9972,7 @@ MonoBehaviour:
   pupil1: {fileID: 1580973532}
   pupil0: {fileID: 1006216188}
   gaze: {fileID: 621627224}
+  cursor: {fileID: 1910074449}
 --- !u!114 &1026043212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9986,6 +9988,18 @@ MonoBehaviour:
   point2: {fileID: 352809323}
   point3: {fileID: 254758272}
   point4: {fileID: 956673371}
+--- !u!114 &1026043213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1026043202}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e27cd3a83add35e4a98405232fd7952a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gazePoint: {fileID: 621627224}
 --- !u!1 &1033319425
 GameObject:
   m_ObjectHideFlags: 0
@@ -16982,6 +16996,7 @@ MonoBehaviour:
   point3: {fileID: 254758272}
   point4: {fileID: 956673371}
   activateObject: {fileID: 1026043202}
+  cursor: {fileID: 1910074449}
 --- !u!1 &1805241106
 GameObject:
   m_ObjectHideFlags: 0
@@ -18098,6 +18113,11 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!1 &1910074449 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1000012943254746, guid: b2db04283121ca74495c2ee000fb4243,
+    type: 2}
+  m_PrefabInternal: {fileID: 247755481}
 --- !u!1 &1911497083
 GameObject:
   m_ObjectHideFlags: 0
@@ -19068,7 +19088,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2007615157}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -2, y: -0, z: -0.52}
+  m_LocalPosition: {x: -4.14, y: -0, z: -0.52}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 1803924612}

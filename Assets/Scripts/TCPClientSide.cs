@@ -48,12 +48,15 @@ public class TCPClientSide : MonoBehaviour
     private GameObject pupil0;
     [SerializeField]
     private GameObject gaze;
+    [SerializeField]
+    private GameObject cursor;
 
     private float boardWidth;
     private float boardHeight;
     private PupilData preData;
-    private static int buffer_size = 10;
+    private static int buffer_size = 1;
     private PupilData[,] buffer = new PupilData[2, buffer_size];
+    private float[,] errorBuffer = new float[buffer_size, 2];
     private int buffer_counter = 0;
 
     public void Start()
@@ -233,6 +236,7 @@ public class TCPClientSide : MonoBehaviour
             if (preData == null && pupildata.topic.EndsWith(".1.")) continue;
             if (pupildata.topic.EndsWith(".0.")) preData = pupildata;
             else if (pupildata.confidence >= 0.60 && preData.confidence >= 0.60)
+                //PushToBuffer(preData, pupildata);
                 TrackPupil(preData, pupildata);
         }
         
@@ -244,28 +248,36 @@ public class TCPClientSide : MonoBehaviour
         {
             buffer[0, buffer_counter] = p0data;
             buffer[1, buffer_counter] = p1data;
+            errorBuffer[buffer_counter, 0] = cursor.transform.position.x;
+            errorBuffer[buffer_counter, 1] = cursor.transform.position.y;
             buffer_counter++;
         }
         else
         {
             PupilData p0 = new PupilData();
             PupilData p1 = new PupilData();
+            float ex = 0, ey = 0;
             for(int i = 0; i < buffer_size; i++)
             {
                 p0.norm_pos[0] += buffer[0, i].norm_pos[0];
                 p0.norm_pos[1] += buffer[0, i].norm_pos[1];
                 p1.norm_pos[0] += buffer[1, i].norm_pos[0];
                 p1.norm_pos[1] += buffer[1, i].norm_pos[1];
+                ex += errorBuffer[i, 0];
+                ey += errorBuffer[i, 1];
             }
             p0.norm_pos[0] /= (float)buffer_size;
             p0.norm_pos[1] /= (float)buffer_size;
             p1.norm_pos[0] /= (float)buffer_size;
             p1.norm_pos[1] /= (float)buffer_size;
-            TrackPupil(p0, p1);
+            ex /= (float)buffer_size;
+            ey /= (float)buffer_size;
+            //TrackPupil(p0, p1, ex, ey);
             buffer_counter = 0;
         }
     }
 
+    //private void TrackPupil(PupilData p0data, PupilData p1data, float ex, float ey)
     private void TrackPupil(PupilData p0data, PupilData p1data)
     {
         float nx = -p1data.norm_pos[0] + 0.5f;
@@ -282,7 +294,10 @@ public class TCPClientSide : MonoBehaviour
         tz = GlobalVars.k14 * tx + GlobalVars.k15 * tz + GlobalVars.k16;
         float gx = (tx + nx) / 2f;
         float gz = (tz + nz) / 2f;
-        float y = -0.07f;
+        float y = -0.05f;
+        //nx -= ex; nz -= ey;
+        //tx -= ex; tz -= ey;
+        //gx -= ex; tz -= ey;
         pupil0.transform.localPosition = new Vector3(nx, y, nz);
         pupil1.transform.localPosition = new Vector3(tx, y, tz);
         gaze.transform.localPosition = new Vector3(gx, y, gz);

@@ -408,12 +408,14 @@
     <Compile Include="Assets\Scripts\CalibrateInteractibleAction.cs" />
     <Compile Include="Assets\Scripts\Calibration.cs" />
     <Compile Include="Assets\Scripts\CalibrationRefineInteractibleAction.cs" />
+    <Compile Include="Assets\Scripts\CheckIntersaction.cs" />
     <Compile Include="Assets\Scripts\DismissOnSelect.cs" />
     <Compile Include="Assets\Scripts\ExitInteractibleAction.cs" />
     <Compile Include="Assets\Scripts\GlobalVars.cs" />
     <Compile Include="Assets\Scripts\HostIpInputInteractibleAction.cs" />
     <Compile Include="Assets\Scripts\Interactible.cs" />
     <Compile Include="Assets\Scripts\InteractibleAction.cs" />
+    <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
     <Compile Include="Assets\Scripts\TagalongAction.cs" />
     <Compile Include="Assets\Scripts\TagAlongInteractibleAction.cs" />
     <Compile Include="Assets\Scripts\TCPClientSide.cs" />

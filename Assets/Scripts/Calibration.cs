@@ -41,31 +41,49 @@ public class Calibration : MonoBehaviour, IInputClickHandler
     private GameObject point4;
     [SerializeField]
     private GameObject activateObject;
+    [SerializeField]
+    private GameObject cursor;
 
     private int clickCounter;
     private int dataSize0, dataSize1;
     private bool clickable;
-    private int sizeGoal;
+    private static int sizeGoal = 100;
+    int skipSize = 20;
     private float boardWidth;
     private float boardHeight;
-    private PupilData[] pupil0Data = new PupilData[105];
-    private PupilData[] pupil1Data = new PupilData[105];
+    private PupilData[] pupil0Data = new PupilData[sizeGoal + 5];
+    private PupilData[] pupil1Data = new PupilData[sizeGoal + 5];
     private float[] o0x = new float[5];
     private float[] o0y = new float[5];
     private float[] o1x = new float[5];
     private float[] o1y = new float[5];
     private float[] rx = new float[5];
     private float[] ry = new float[5];
+    private float basex;
+    private float basey;
+    private float[] errorx0 = new float[sizeGoal + 5];
+    private float[] errorx1 = new float[sizeGoal + 5];
+    private float[] errory0 = new float[sizeGoal + 5];
+    private float[] errory1 = new float[sizeGoal + 5];
 
     void IInputClickHandler.OnInputClicked(InputClickedEventData eventData)
     {
-        Debug.Log("Start calibration...");
+        //Debug.Log("Start calibration...");
         if (clickable)
         {
             if (clickCounter < 4)
             {
+                if(clickCounter == 0)
+                {
+                    //basex = cursor.transform.position.x;
+                    //basey = cursor.transform.position.y;
+                    basex = 0f;
+                    basey = 0f;
+                }
                 clickable = false;
                 clickCounter++;
+                GameObject textObject = GameObject.Find("Description");
+                textObject.GetComponent<TextMesh>().text = "Calibrating Point " + clickCounter + "...";
             }
             else
             {
@@ -78,7 +96,6 @@ public class Calibration : MonoBehaviour, IInputClickHandler
 
     // Use this for initialization
     void Start () {
-        sizeGoal = 100;
         rx[1] = GlobalVars.p1x; ry[1] = GlobalVars.p1z;
         rx[2] = GlobalVars.p2x; ry[2] = GlobalVars.p2z;
         rx[3] = GlobalVars.p3x; ry[3] = GlobalVars.p3z;
@@ -291,18 +308,27 @@ public class Calibration : MonoBehaviour, IInputClickHandler
                 if(pupildata.topic.EndsWith(".0."))
                 {
                     if(dataSize0 < sizeGoal)
+                    {
+                        errorx0[dataSize0] = cursor.transform.position.x - basex;
+                        errory0[dataSize0] = cursor.transform.position.y - basey;
                         pupil0Data[dataSize0++] = pupildata;
-                } else
+                    }
+                }
+                else
                 {
                     if (dataSize1 < sizeGoal)
+                    {
+                        errorx1[dataSize1] = cursor.transform.position.x - basex;
+                        errory1[dataSize1] = cursor.transform.position.y - basey;
                         pupil1Data[dataSize1++] = pupildata;
+                    }
                 }
             }
         }
 
         int dataSize = dataSize0 + dataSize1;
         float ratio = (float)dataSize / ((float)sizeGoal * 2f);
-        Color newColor = new Color(1 - ratio, ratio / 2, 0F);
+        Color newColor = new Color(1f - ratio, ratio / 3f, 0F);
         Material m = point.GetComponent<Renderer>().material;
         m.SetColor("_EmissionColor", newColor);
         Debug.Log("Scene: " + clickCounter + " | Frame: " + dataSize);
@@ -319,22 +345,36 @@ public class Calibration : MonoBehaviour, IInputClickHandler
             case 4: point = point4; break;
             default: point = point1; break;
         }
-        float t0x = 0, t0y = 0, t1x = 0, t1y = 0;
-        for(int i = 0; i < sizeGoal; i++)
+        float t0x = 0, t0y = 0, t1x = 0, t1y = 0, e0x = 0, e1x = 0, e0y = 0, e1y = 0;
+        
+        for(int i = skipSize; i < sizeGoal; i++)
         {
             t0x += pupil0Data[i].norm_pos[0];
             t0y += pupil0Data[i].norm_pos[1];
             t1x += 1 - pupil1Data[i].norm_pos[0];
             t1y += 1 - pupil1Data[i].norm_pos[1];
+            e0x += errorx0[i];
+            e1x += errorx1[i];
+            e0y += errory0[i];
+            e1y += errory1[i];
         }
-        o0x[scene] = t0x / (float)sizeGoal - 0.5f;
-        o0y[scene] = t0y / (float)sizeGoal - 0.5f;
-        o1x[scene] = t1x / (float)sizeGoal - 0.5f;
-        o1y[scene] = t1y / (float)sizeGoal - 0.5f;
+        e0x /= (float)(sizeGoal - skipSize);
+        e1x /= (float)(sizeGoal - skipSize);
+        e0y /= (float)(sizeGoal - skipSize);
+        e1y /= (float)(sizeGoal - skipSize);
+        o0x[scene] = t0x / (float)(sizeGoal - skipSize) - 0.5f;
+        o0y[scene] = t0y / (float)(sizeGoal - skipSize) - 0.5f;
+        o1x[scene] = t1x / (float)(sizeGoal - skipSize) - 0.5f;
+        o1y[scene] = t1y / (float)(sizeGoal - skipSize) - 0.5f;
         o0x[scene] *= boardWidth;
         o0y[scene] *= boardHeight;
         o1x[scene] *= boardWidth;
         o1y[scene] *= boardHeight;
+        o0x[scene] += e0x;
+        o0y[scene] += e0y;
+        o1x[scene] += e1x;
+        o1y[scene] += e1y;
+
 
         if (scene == 4)
         {
@@ -370,6 +410,11 @@ public class Calibration : MonoBehaviour, IInputClickHandler
         {
             GameObject textObject = GameObject.Find("Description");
             textObject.GetComponent<TextMesh>().text = "Click again to exit.";
+        }
+        else
+        {
+            GameObject textObject = GameObject.Find("Description");
+            textObject.GetComponent<TextMesh>().text = "Click to start next calibration.";
         }
     }
     // Update is called once per frame

@@ -89,6 +89,14 @@ namespace Academy
             }
         }
 
+        public void PlaySound()
+        {
+            if (audioSource != null && !audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+        }
+
         private void OnDestroy()
         {
             foreach (Material material in defaultMaterials)
